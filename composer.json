@@ -1,0 +1,25 @@
+{
+  "name": "konsulting/testbench-dusk-test",
+  "description": "simple package to test testbench dusk within a package",
+  "minimum-stability": "stable",
+  "license": "proprietary",
+  "authors": [
+    {
+      "name": "Keoghan Litchfield",
+      "email": "keoghan@klever.co.uk"
+    }
+  ],
+  "require": {
+    "orchestra/testbench-dusk": "~6.4"
+  },
+  "autoload": {
+    "psr-4": {
+      "TestbenchDuskTest\\": "src/"
+    }
+  },
+  "autoload-dev": {
+    "psr-4": {
+      "Tests\\": "tests/"
+    }
+  }
+}

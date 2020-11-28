@@ -1,0 +1,7 @@
+composer.lock
+.phpunit.result.cache
+vendor/*
+
+tests/Browser/console/*
+tests/Browser/screenshots/*
+tmp/*
