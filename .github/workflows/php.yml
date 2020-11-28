@@ -1,0 +1,46 @@
+name: PHP Composer
+
+on:
+  push:
+    branches: [ master ]
+  pull_request:
+    branches: [ master ]
+
+jobs:
+  build:
+
+    runs-on: ubuntu-latest
+
+    steps:
+    - uses: actions/checkout@v2
+
+    - name: Validate composer.json and composer.lock
+      run: composer validate
+
+    - name: Cache Composer packages
+      id: composer-cache
+      uses: actions/cache@v2
+      with:
+        path: vendor
+        key: ${{ runner.os }}-php-${{ hashFiles('**/composer.lock') }}
+        restore-keys: |
+          ${{ runner.os }}-php-
+
+    - name: Install dependencies
+      if: steps.composer-cache.outputs.cache-hit != 'true'
+      run: composer install --prefer-dist --no-progress --no-suggest
+
+    - name: Create database
+      run: php ./create-sqlite-db
+    - name: Upgrade Chrome Driver
+      run: vendor/bin/dusk-updater detect --auto-update
+    - name: Start Chrome Driver
+      run: vendor/laravel/dusk/bin/chromedriver-linux &
+    - name: Execute tests
+      run: vendor/bin/phpunit
+    - name: Upload Failed Screenshots
+      uses: actions/upload-artifact@v2-preview
+      if: failure()
+      with:
+        name: screenshots
+        path: tests/Browser/screenshots/*
